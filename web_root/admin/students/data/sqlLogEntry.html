@@ -1,0 +1,44 @@
+[
+    ~[tlist_sql;
+        SELECT
+            lg.dcid ldcid,
+            s.dcid sdcid,
+            g.name,
+            lg.entry_date,
+            substr('00' || to_char(FLOOR(((lg.entry_time-MOD(lg.entry_time, 60))/60)/60)),-2,2) Hours,
+            substr('00' || to_char(MOD(((lg.entry_time-(MOD(lg.entry_time, 60)))/60),60)),-2,2) Minutes,
+            CASE
+                WHEN lg.entry_time < 43200 THEN 'AM'
+                ELSE 'PM'
+            END ampm,
+            lg.entry_author,
+            to_char(st.ValueT) subtype,
+            --Escape all invalid JSON characters. Make sure to escape backslash first or other escaped chars will have 2 backslashes instead of 1.
+            replace(replace(replace(replace(replace(replace(replace(lg.subject, chr(92), '\\'), chr(34), '\"'), chr(47), '\/'), chr(12), '\f'), chr(10), '\n'), chr(13), '\r'), chr(9), '\t') subject,
+            replace(replace(replace(replace(replace(replace(replace(lg.entry, chr(92), '\\'), chr(34), '\"'), chr(47), '\/'), chr(12), '\f'), chr(10), '\n'), chr(13), '\r'), chr(9), '\t') logText
+        FROM log lg
+        INNER JOIN ps.students s ON lg.studentid = s.id
+        INNER JOIN ps.gen g ON lg.logtypeid = g.id
+        LEFT OUTER JOIN ps.gen st ON st.Name = to_char(g.ID)
+            AND st.value = lg.subtype
+            AND st.Cat = 'subtype'
+        WHERE lg.studentid = ~[gpv:curstudid]
+        AND (SELECT to_char(gp.ValueT2) FROM Teachers t INNER JOIN Gen gp ON t.groupValue = gp.ID WHERE t.ID = ~[gpv:teacherid] AND gp.cat = 'groups') LIKE '%' || lg.LogTypeID || '%'
+        order by lg.entry_date DESC, lg.Entry_Time DESC
+    ]
+        {
+            "gpvfields": ["curstudid", "teacherid"],
+            "logDCID": "~(ldcid;i)",
+            "studentDCID": "~(sdcid;i)",
+            "name": "~(name;t)",
+            "entryDate": "~(entry_date;d)",
+            "hours": "~(Hours)",
+            "minutes": "~(Minutes)",
+            "ampm": "~(ampm)",
+            "entryAuthor": "~(entry_author;t)",
+            "subType": "~(subtype;t)",
+            "subject": "~(subject;t)",
+            "logText": "~(logText;t)"
+        },
+    [/tlist_sql]{}
+]

@@ -1,0 +1,62 @@
+<script>
+    var psData = {};
+    psData.curStudId = ~(curstudid);
+    psData.userId = ~[x:userid];
+</script>
+
+<script type="text/template" id="buttons-template">
+    <div id="buttons">
+        <a href="disciplinealert.html?frn=~(studentfrn)" id="btnEdit" class="button">~[text:psx.html.admin_students.log.edit_discipline_alert]</a>
+        <a href="customlogentry.html?frn=008-1&studentfrn=~(studentfrn)" id="btnNew" class="button">~[text:psx.html.admin_students.log.new]</a>
+    </div>
+</script>
+
+<script type="text/template" id="data-table-template">
+    <!-- start of DataTable  -->
+    <div id="LogEntryContainer">
+        <table id="myTable" style="border:1px solid grey;" data-pstablefilter='{"cols":"2,3,4,5,6,7"}'>
+            <thead>
+            <tr>
+                <th class="bold" style="border:1px solid grey;width:25px">Link</th>
+                <th class="bold" style="border:1px solid grey;width:100px">Type</th>
+                <th class="bold" style="border:1px solid grey;width:75px">Date</th>
+                <th class="bold" style="border:1px solid grey;;width:100px">Author</th>
+                <th class="bold" style="border:1px solid grey;">Subtype</th>
+                <th class="bold" style="border:1px solid grey;min-width:150px">Title</th>
+                <th class="bold" style="border:1px solid grey;min-width:200px">Details</th>
+            </tr>
+            </thead>
+            <tbody>
+            <%
+                _.each(rows, function(row) {
+            %>
+                <tr>
+                    <td>
+                        <a href="customlogentry.html?frn=008<%= row.logDCID %>&studentfrn=001<%= row.studentDCID %>">
+                            <img src="/images/btn_edit.gif" alt="" width="16" height="16" border="0">
+                        </a>
+                    </td>
+                    <td><%= row.name %></td>
+                    <td><%= row.entryDate %><br /><%= row.hours %>:<%= row.minutes %> <%= row.ampm %></td>
+                    <td><%= row.entryAuthor %></td>
+                    <td><%= row.subType %></td>
+                    <td><%= row.subject %></td>
+                    <td><%= row.logText %></td>
+                </tr>
+            <%
+                });
+            %>
+            </tbody>
+        </table>
+    </div>
+</script>
+
+<style>
+    #buttons {
+        text-align: center;
+    }
+</style>
+
+<div id="parse" style="display: none;"></div>
+
+<script src="/scripts/EnhancedLogEntries/logentry.js"></script>
