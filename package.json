@@ -1,0 +1,19 @@
+{
+  "name": "enhanced-log-entries",
+  "version": "1.0.0",
+  "description": "Add links that provide additional information to the public login page",
+  "main": "",
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IronCountySchoolDistrict/public-login-link.git"
+  },
+  "author": "IronCountySchoolDistrict",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/IronCountySchoolDistrict/public-login-link/issues"
+  },
+  "homepage": "https://github.com/IronCountySchoolDistrict/public-login-link#readme"
+}

@@ -59,4 +59,4 @@
 
 <div id="parse" style="display: none;"></div>
 
-<script src="/scripts/EnhancedLogEntries/logentry.js"></script>
+<script src="/src/enhanced-log-entries/js/logentry.js"></script>
