@@ -13,13 +13,18 @@
 
 <script type="text/template" id="data-table-template">
     <!-- start of DataTable  -->
-    <div id="LogEntryContainer">
-        <table id="myTable" style="border:1px solid grey;" data-pstablefilter='{"cols":"2,3,4,5,6,7"}'>
+    <div id="LogEntryContainer" style="margin-top: 10px;">
+        <table id="LogEntries" style="border:1px solid grey;" data-pstablefilter='{"cols":"2,3,4,5,6,7"}'>
             <thead>
+                <tr bgcolor="#bad3e5" class="psfilter-exclude" style="height:40px"> 
+                    <th colspan="7" style="text-align: center;">
+                        Search:&nbsp;<input type="text" id="myfilterid" data-pstablefiltertarget="LogEntries" size="25">
+                    </th>
+                </tr>
             <tr>
-                <th class="bold" style="border:1px solid grey;width:25px">Link</th>
-                <th class="bold" style="border:1px solid grey;width:100px">Type</th>
-                <th class="bold" style="border:1px solid grey;width:75px">Date</th>
+                <th class="bold" style="border:1px solid grey;width:25px">Edit</th>
+                <th class="bold" style="border:1px solid grey;width:100px"> LogType</th>
+                <th class="bold" style="border:1px solid grey;width:75px">Date/Time</th>
                 <th class="bold" style="border:1px solid grey;;width:100px">Author</th>
                 <th class="bold" style="border:1px solid grey;">Subtype</th>
                 <th class="bold" style="border:1px solid grey;min-width:150px">Title</th>
@@ -59,4 +64,4 @@
 
 <div id="parse" style="display: none;"></div>
 
-<script src="/src/enhanced-log-entries/js/logentry.js"></script>
+<script src="<!-- @echo IMAGE_SERVER_URL -->/enhanced-log-entries/js/logentry.js"></script>

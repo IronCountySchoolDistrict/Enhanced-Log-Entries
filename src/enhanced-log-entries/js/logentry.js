@@ -6,7 +6,7 @@ function parseJSON(data) {
     return jsonData;
 }
 
-require(['underscore'], function () {
+require(['underscore', 'psTableFilter'], function (_, psTableFilter) {
     'use strict';
     $j('body').attr('class', 'yui-skin-sam');
 
@@ -25,5 +25,6 @@ require(['underscore'], function () {
         var renderedTemplate = _.template(dataTableTemplate, context);
 
         boxRoundSelect.append(renderedTemplate);
+        psTableFilter.init();
     });
 });
