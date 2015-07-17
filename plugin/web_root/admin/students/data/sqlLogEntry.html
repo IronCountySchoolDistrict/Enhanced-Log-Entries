@@ -13,8 +13,10 @@
             END ampm,
             lg.entry_author,
             to_char(st.ValueT) subtype,
-            lg.subject subject,
-            lg.entry logText
+            --Escape all invalid JSON characters. Make sure to escape backslash first or other escaped chars will have 2 backslashes instead of 1.
+            --Don't try to use ;js below to escape characters, it will escape single quotes with "\'" which breaks JSON parsing
+            replace(replace(replace(replace(replace(replace(replace(lg.subject, chr(92), '\\'), chr(34), '\"'), chr(47), '\/'), chr(12), '\f'), chr(10), '\n'), chr(13), '\r'), chr(9), '\t') subject,
+            replace(replace(replace(replace(replace(replace(replace(lg.entry, chr(92), '\\'), chr(34), '\"'), chr(47), '\/'), chr(12), '\f'), chr(10), '\n'), chr(13), '\r'), chr(9), '\t') logText
         FROM log lg
         INNER JOIN ps.students s ON lg.studentid = s.id
         INNER JOIN ps.gen g ON lg.logtypeid = g.id
@@ -36,8 +38,8 @@
             "ampm": "~(ampm;js)",
             "entryAuthor": "~(entry_author;js)",
             "subType": "~(subtype;js)",
-            "subject": "~(subject;js)",
-            "logText": "~(logText;js)"
+            "subject": "~(subject)",
+            "logText": "~(logText)"
         },
     [/tlist_sql]{}
 ]

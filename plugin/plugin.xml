@@ -5,6 +5,32 @@
         name="Enhanced Log Entries"
         version="1.0.0"
         xsi:schemaLocation="http://plugin.powerschool.pearson.com plugin.xsd">
+
+        <oauth></oauth>
+
+        <access_request>
+          <field table="LOG" field="ID" access="ViewOnly" />
+          <field table="LOG" field="DCID" access="ViewOnly" />
+          <field table="LOG" field="ENTRY_DATE" access="ViewOnly" />
+          <field table="LOG" field="ENTRY_TIME" access="ViewOnly" />
+          <field table="LOG" field="ENTRY_AUTHOR" access="ViewOnly" />
+          <field table="LOG" field="SUBJECT" access="ViewOnly" />
+          <field table="LOG" field="ENTRY" access="ViewOnly" />
+          <field table="LOG" field="STUDENTID" access="ViewOnly" />
+          <field table="LOG" field="LOGTYPEID" access="ViewOnly" />
+          <field table="LOG" field="SUBTYPE" access="ViewOnly" />
+          <field table="STUDENTS" field="ID" access="ViewOnly" />
+          <field table="STUDENTS" field="DCID" access="ViewOnly" />
+          <field table="GEN" field="NAME" access="ViewOnly" />
+          <field table="GEN" field="ID" access="ViewOnly" />
+          <field table="GEN" field="VALUE" access="ViewOnly" />
+          <field table="GEN" field="CAT" access="ViewOnly" />
+          <field table="GEN" field="VALUET" access="ViewOnly" />
+          <field table="GEN" field="VALUET2" access="ViewOnly" />
+          <field table="TEACHERS" field="ID" access="ViewOnly" />
+          <field table="TEACHERS" field="GROUPVALUE" access="ViewOnly" />
+    </access_request>
+
     <publisher name="Nathan Jones">
         <contact email="nathan.jones@ironmail.org"/>
     </publisher>

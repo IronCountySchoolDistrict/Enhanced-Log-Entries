@@ -1,0 +1,48 @@
+<queries>
+    <query name="com.icsd.ele.log.entry" coreTable="" flattened="false">
+        <description>Retrieve log information submitted by the current user for the current student</description>
+        <args>
+          <arg name="userid" description="USERS.id" type="primitive" required="true" />
+          <arg name="studentid" description="STUDENTS.id" type="primitive" required="true" />
+        </args>
+        <columns>
+          <column column="GEN.VALUET">SUBTYPE</column>
+          <column column="GEN.VALUET">SUBTYPE</column>
+          <column column="GEN.VALUET">SUBTYPE</column>
+          <column column="GEN.VALUET">SUBTYPE</column>
+          <column column="GEN.VALUET">SUBTYPE</column>
+          <column column="GEN.VALUET">SUBTYPE</column>
+          <column column="GEN.VALUET">SUBTYPE</column>
+          <column column="GEN.VALUET">SUBTYPE</column>
+          <column column="GEN.VALUET">SUBTYPE</column>
+          <column column="GEN.VALUET">SUBTYPE</column>
+     		</columns>
+        <sql>
+			<![CDATA[
+      SELECT
+          lg.dcid ldcid,
+          s.dcid sdcid,
+          g.name,
+          lg.entry_date,
+          substr('00' || to_char(FLOOR(((lg.entry_time-MOD(lg.entry_time, 60))/60)/60)),-2,2) Hours,
+          substr('00' || to_char(MOD(((lg.entry_time-(MOD(lg.entry_time, 60)))/60),60)),-2,2) Minutes,
+          CASE
+              WHEN lg.entry_time < 43200 THEN 'AM'
+              ELSE 'PM'
+          END ampm,
+          lg.entry_author,
+          lg.subject subject,
+          lg.entry logText
+      FROM log lg
+      INNER JOIN students s ON lg.studentid = s.id
+      INNER JOIN gen g ON lg.logtypeid = g.id
+      LEFT OUTER JOIN gen st ON st.Name = to_char(g.ID)
+          AND st.value = lg.subtype
+          AND st.Cat = 'subtype'
+      WHERE lg.studentid = :studentid
+      AND (SELECT to_char(gp.ValueT2) FROM Teachers t INNER JOIN Gen gp ON t.groupValue = gp.ID WHERE t.ID = :userid AND gp.cat = 'groups') LIKE '%' || lg.LogTypeID || '%'
+      order by lg.entry_date DESC, lg.Entry_Time DESC
+			]]>
+        </sql>
+    </query>
+</queries>
