@@ -13,8 +13,6 @@
             END ampm,
             lg.entry_author,
             to_char(st.ValueT) subtype,
-            --Escape all invalid JSON characters. Make sure to escape backslash first or other escaped chars will have 2 backslashes instead of 1.
-            --Don't try to use ;js below to escape characters, it will escape single quotes with "\'" which breaks JSON parsing
             replace(replace(replace(replace(replace(replace(replace(lg.subject, chr(92), '\\'), chr(34), '\"'), chr(47), '\/'), chr(12), '\f'), chr(10), '\n'), chr(13), '\r'), chr(9), '\t') subject,
             replace(replace(replace(replace(replace(replace(replace(lg.entry, chr(92), '\\'), chr(34), '\"'), chr(47), '\/'), chr(12), '\f'), chr(10), '\n'), chr(13), '\r'), chr(9), '\t') logText
         FROM log lg
