@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<!-- start right frame -->
+<head>
+    <meta name="Author" content="Jason Springel, Pearson">
+    <meta name="Version" content="4.0 - 10/31/2015">
+<!--                            -->
+<!-- Enhanced Log Entries       -->
+<!-- Created by Jason Springel  -->
+<!-- v4.0 released 11/11/2015 - This page has been customized as part of the Enhanced Log Entries plugin -->
+
+<title>~[text:psx.html.admin_students.customlogentry.log_entry]</title>
+~[wc:UI_js_includes]
+~[wc:commonscripts]
+~[x:logtypejs]
+<link href="/images/css/screen.css" rel="stylesheet" media="screen">
+<link href="/images/css/print.css" rel="stylesheet" media="print">
+<script type="text/javascript" src="/scripts/timeentry_widget.js" ></script>
+</head>
+
+<body>
+<form action="/~[self.page]?frn=~(frn)&studentfrn=~(studentfrn)&changesSaved=true" method="POST">
+~[wc:admin_header_frame_css]<!-- breadcrumb start --><a href="/admin/home.html" target="_top">~[text:psx.html.admin_students.customlogentry.start_page]</a> &gt; <a href="home.html?selectstudent=nosearch" target="_top">~[text:psx.html.admin_students.customlogentry.student_selection]</a> &gt;~[text:psx.html.admin_students.customlogentry.log_entry1]<!-- breadcrumb end -->~[wc:admin_navigation_frame_css]
+
+~[wc:title_student_begin_css]~[if.~(rn)=-99]~[text:psx.html.admin_students.customlogentry.new][else]~[text:psx.html.admin_students.customlogentry.edit][/if]~[text:psx.html.admin_students.customlogentry.log_entry2]~[wc:title_student_end_css]
+
+<!-- start of content and bounding box -->
+~[if.~(gpv.changesSaved)=true]<div class="feedback-confirm">~[text:psx.common.changes_recorded]</div>[/if]
+<div style="width: 200px; margin: 10px auto 10px;"><a class="button" href="log.html?frn=~(studentfrn)">Return To Log Entry List</a></div>
+<div class="box-round">
+		<table border="0" cellspacing="0" cellpadding="4">
+			<tr bgcolor="#edf3fe">~[x:customlogscreen]
+				<td class="bold">[label]</td>
+				<td>[entryitem]</td>
+			</tr>
+		</table>
+		<table>
+			<!-- Start insert state specific log information -->
+			 ~[x:insertfile;state/log~[displaypref:districtstate].html]
+			<!-- End insert state specific log information -->
+		</table>
+		
+	
+	<div class="button-row">
+	<input type="hidden" name="ac" value="prim">
+	<input type="hidden" name="frn" value="~(gpv.frn;encodehtml)">
+	<input type="hidden" name="[08]subtype" value=" ">
+	<input type="hidden" name="[08]studentid" value="~(curstudid)">~(deletebutton3)~[submitbutton]
+	</div>
+</div>
+<!-- end of content of bounding box -->
+
+~[wc:admin_footer_frame_css]
+</form>
+
+</body>
+</html><!-- end right frame -->

@@ -1,0 +1,34 @@
+[~[tlist_sql;
+SELECT 
+	lg.dcid ldcid,
+	s.dcid sdcid,
+	lg.entry_date,
+	lg.entry_time,
+	lg.entry_author,
+	g.name,
+	to_char(st.ValueT) subtype,
+	lg.subject,
+	lg.entry logText
+FROM
+	log lg
+INNER JOIN ps.students s ON lg.studentid = s.id
+INNER JOIN ps.gen g ON lg.logtypeid = g.id
+LEFT OUTER JOIN ps.gen st ON st.Name = to_char(g.ID)
+AND st.value = lg.subtype
+AND st.Cat = 'subtype'
+WHERE lg.studentid = ~(curstudid)
+  AND (SELECT to_char(gp.ValueT2) FROM Teachers t 
+  	   INNER JOIN Gen gp ON t.groupValue = gp.ID 
+  	   WHERE t.ID = ~[x:userid] AND gp.cat = 'groups') LIKE '%' || lg.LogTypeID || '%'
+  ORDER BY lg.entry_date desc,lg.entry_time desc]
+{
+"LDCID":~(LDCID),
+"SDCID":~(SDCID),
+"DATE":"~(entry_date;d)",
+"TIME":"~(entry_time;l;format=time)",
+"AUTHOR":"~(entry_author;json)",
+"LOGTYPE":"~(NAME;json)",
+"SUBTYPE":"~(subtype;json)",
+"SUBJECT":"~(subject;json)",
+"LOGTEXT":"~(logText;json)"},
+[/tlist_sql] {}]
