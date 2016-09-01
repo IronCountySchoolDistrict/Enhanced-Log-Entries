@@ -7,8 +7,7 @@ define(['angular', 'components/shared/index'], function(angular) {
 
     $scope.eLogList = [];
 
-    eLogGetService.geteLog('eLog.json').then(function(retData) {
-      retData.pop();
+    eLogGetService.geteLog('eLog-roles.json').then(function(retData) {
       for (var i = 0; i < retData.length; i++) {
         retData[i].DATE = i18nUtils.parseLocalizedDate(retData[i].DATE);
       }
