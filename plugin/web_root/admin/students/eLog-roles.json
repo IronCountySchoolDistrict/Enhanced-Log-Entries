@@ -1,86 +1,63 @@
-[
-	~[tlist_sql;
-		WITH
-	    temp AS
-	  (
-				SELECT
-		      to_char(teacher_group.id)      AS group_id,
-		      teacher_group.name             AS group_name,
-		      to_char(teacher_group.valuet2) AS log_types,
-		      teachers.lastfirst             AS teacher_name
-		    FROM teachers
-		      LEFT JOIN gen teacher_group ON teacher_group.cat = 'groups' AND
-		                                     teachers.groupvalue = teacher_group.id
-		    WHERE
-		      teachers.id = ~[x:userid]
-		    UNION
-	      SELECT
-	        roleproperty.propvalue AS group_id,
-	        gen.name               AS group_name,
-	        to_char(gen.valuet2)   AS log_types,
-	        teachers.lastfirst     AS teacher_name
-	      FROM roleproperty
-	        JOIN roleavailableproperty ON roleproperty.roleavailablepropertyid = roleavailableproperty.id
-	        JOIN roledef ON roleproperty.roledefid = roledef.id
-	        JOIN gen ON gen.cat = 'groups' AND roleproperty.propvalue = gen.id
-	        JOIN roledefteachersmap ON roledef.id = roledefteachersmap.roledefid
-	        JOIN teachers ON roledefteachersmap.teachersdcid = teachers.dcid
-	      WHERE roleavailableproperty.name = 'Security Group' AND
-	            teachers.id = ~[x:userid]
-	  ),
-	    distinct_log_types AS
-	  (
-	      SELECT DISTINCT single_log_type
-	      FROM (
-	        SELECT trim(regexp_substr(t.log_types, chr(91) || chr(94) || chr(59) || chr(93) || '+', 1, levels.column_value)) AS single_log_type
-	        FROM
-	          temp t,
-	          TABLE (cast(MULTISET (SELECT level
-	                                FROM dual
-	                                CONNECT BY level <= length(regexp_replace(t.log_types, chr(91) || chr(94) || chr(59) || chr(93) || '+')) + 1) AS sys.odcinumberlist)) levels
-	      )
-	      WHERE single_log_type IS NOT NULL
-	  )
+[~[tlist_sql;
+    WITH
+    temp AS(
+      SELECT to_char(teacher_group.id) AS group_id,
+      teacher_group.name AS group_name,
+      to_char(teacher_group.valuet2) AS log_types,
+      teachers.lastfirst AS teacher_name FROM teachers LEFT JOIN gen teacher_group ON teacher_group.cat = 'groups'
+      AND teachers.groupvalue = teacher_group.id WHERE teachers.id = ~[x: userid] UNION SELECT roleproperty.propvalue AS group_id,
+      gen.name AS group_name,
+      to_char(gen.valuet2) AS log_types,
+      teachers.lastfirst AS teacher_name FROM roleproperty JOIN roleavailableproperty ON roleproperty.roleavailablepropertyid = roleavailableproperty.id JOIN roledef ON roleproperty.roledefid = roledef.id JOIN gen ON gen.cat = 'groups'
+      AND roleproperty.propvalue = gen.id JOIN roledefteachersmap ON roledef.id = roledefteachersmap.roledefid JOIN teachers ON roledefteachersmap.teachersdcid = teachers.users_dcid WHERE roleavailableproperty.name = 'Security Group'
+      AND teachers.id = ~[x: userid]
+    ),
+    distinct_log_types AS(
+      SELECT DISTINCT single_log_type FROM(
+        SELECT trim(regexp_substr(t.log_types, chr(91) || chr(94) || chr(59) || chr(93) || '+', 1,
+          levels.column_value)) AS single_log_type FROM temp t,
+        TABLE(cast(MULTISET(SELECT level FROM dual CONNECT BY level <= length(regexp_replace(t.log_types,
+          chr(91) || chr(94) || chr(59) || chr(93) ||
+          '+')) + 1) AS sys.odcinumberlist)) levels
+      ) WHERE single_log_type IS NOT NULL
+    )
 
-	SELECT
-	  log.dcid           AS log_dcid,
-	  students.dcid      AS students_dcid,
-	  log.entry_date,
-	  log.entry_time,
-	  log.entry_author,
-	  log_type.name      AS log_type,
-	  log_subtype.valuet AS log_subtype,
-	  log.subject,
-	  log.entry,
-	  CASE WHEN row_number()
-	                OVER (
-	                  ORDER BY NULL) = count(*)
-	                OVER ()
-	        THEN ''
-	      ELSE ',' END AS comma
-	FROM log
-	  JOIN students ON log.studentid = students.id
-	  JOIN gen log_type ON log.logtypeid = log_type.id
-	  LEFT OUTER JOIN gen log_subtype ON to_char(log_type.id) = log_subtype.name AND
-	                                     log_subtype.value = log.subtype AND
-	                                     log_subtype.cat = 'subtype'
-	WHERE log.logtypeid IN (
-	  SELECT single_log_type
-	  FROM distinct_log_types
-	) AND
-	      students.id = ~(curstudid)
-	ORDER BY log.entry_date DESC, log.entry_time DESC
-	]
-		{
-			"LDCID":~(LDCID),
-			"SDCID":~(SDCID),
-			"DATE":"~(entry_date;d)",
-			"TIME":"~(entry_time;l;format=time)",
-			"AUTHOR":"~(entry_author;json)",
-			"LOGTYPE":"~(NAME;json)",
-			"SUBTYPE":"~(subtype;json)",
-			"SUBJECT":"~(subject;json)",
-			"LOGTEXT":"~(logText;json)"
-		}~(comma)
-	[/tlist_sql]
-]
+    SELECT
+    log.dcid AS log_dcid,
+    students.dcid AS students_dcid,
+    log.entry_date,
+    log.entry_time,
+    log.entry_author,
+    log_type.name AS log_type,
+    log_subtype.valuet AS log_subtype,
+    log.subject,
+    log.entry,
+    CASE WHEN row_number()
+    OVER(
+      ORDER BY NULL) = count( * )
+    OVER()
+    THEN ''
+    ELSE ','
+    END AS comma
+    FROM log
+    JOIN students ON log.studentid = students.id
+    JOIN gen log_type ON log.logtypeid = log_type.id
+    LEFT OUTER JOIN gen log_subtype ON to_char(log_type.id) = log_subtype.name AND
+    log_subtype.value = log.subtype AND
+    log_subtype.cat = 'subtype'
+    WHERE log.logtypeid IN(
+      SELECT single_log_type FROM distinct_log_types
+    ) AND
+    students.id = ~(curstudid)
+    ORDER BY log.entry_date DESC, log.entry_time DESC
+  ] {
+    "LDCID": ~(LDCID),
+    "SDCID": ~(SDCID),
+    "DATE": "~(entry_date;d)",
+    "TIME": "~(entry_time;l;format=time)",
+    "AUTHOR": "~(entry_author;json)",
+    "LOGTYPE": "~(NAME;json)",
+    "SUBTYPE": "~(subtype;json)",
+    "SUBJECT": "~(subject;json)",
+    "LOGTEXT": "~(logText;json)"
+  }~(comma)[/tlist_sql]]
