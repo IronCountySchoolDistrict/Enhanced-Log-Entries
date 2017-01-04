@@ -1,129 +1,130 @@
 <!DOCTYPE html>
 <html>
 <!-- start right frame -->
+
 <head>
     <meta name="Author" content="Jason Springel, Pearson">
     <meta name="Version" content="4.0 - 10/31/2015">
-<!--                            -->
-<!-- Enhanced Log Entries       -->
-<!-- Created by Jason Springel  -->
-<!-- v1.0 released 01/26/2010   -->
-<!-- v1.1 released 01/26/2010   -->
-<!-- v1.2 released 05/02/2011   -->
-<!-- v2.0 released 06/21/2011 - PS 7 UI -->
-<!-- v2.1 released 07/20/2012 - Fix display issue for students with large Log Entry Text -->
-<!-- v2.11 released 07/30/2012 - Oops..2.1 had old code. Also re-added internationalization -->
-<!-- v3.0 released 09/13/2013 - Rewrote table display code to remove YUI and add new filter tech. Added log time. -->
-<!-- v4.0 released 11/11/2015 - Complete re-write to use the new Table Grid technology and distribute as a plugin. -->
-<!--                            Supports localized dates for international users -->
-<!--                            -->
-<!-- Special thanks to Jason Treadwell and Matt Freund for SQL assistance!!  -->
-<!-- Special thanks to Brian B. for JavaScript/Angular date assistance!!  -->
+    <!--                            -->
+    <!-- Enhanced Log Entries       -->
+    <!-- Created by Jason Springel  -->
+    <!-- v1.0 released 01/26/2010   -->
+    <!-- v1.1 released 01/26/2010   -->
+    <!-- v1.2 released 05/02/2011   -->
+    <!-- v2.0 released 06/21/2011 - PS 7 UI -->
+    <!-- v2.1 released 07/20/2012 - Fix display issue for students with large Log Entry Text -->
+    <!-- v2.11 released 07/30/2012 - Oops..2.1 had old code. Also re-added internationalization -->
+    <!-- v3.0 released 09/13/2013 - Rewrote table display code to remove YUI and add new filter tech. Added log time. -->
+    <!-- v4.0 released 11/11/2015 - Complete re-write to use the new Table Grid technology and distribute as a plugin. -->
+    <!--                            Supports localized dates for international users -->
+    <!--                            -->
+    <!-- Special thanks to Jason Treadwell and Matt Freund for SQL assistance!!  -->
+    <!-- Special thanks to Brian B. for JavaScript/Angular date assistance!!  -->
 
-<!--                     -->
-<title>~[text:psx.html.admin_students.log.log_entries]</title>
-~[wc:commonscripts]
-<link href="/images/css/screen.css" rel="stylesheet" media="screen">
-<link href="/images/css/print.css" rel="stylesheet" media="print">
-<style>    
-    .fieldsetDiv
-    {
-        margin: 0px;
-    }
+    <!--                     -->
+    <title>~[text:psx.html.admin_students.log.log_entries]</title>
+    ~[wc:commonscripts]
+    <link href="/images/css/screen.css" rel="stylesheet" media="screen">
+    <link href="/images/css/print.css" rel="stylesheet" media="print">
+    <style>
+        .fieldsetDiv {
+            margin: 0px;
+        }
 
-    a.imageLink {
-    display:block;
-    background:url(/images/elog_edit_icon.svg) top no-repeat;
-    width:18px;
-    height:18px;
-    text-decoration:none;
-    }
-    a.imageLink:hover {
-    background-position:bottom;
-    }
-    a.imageLink span {
-    visibility:hidden;
-    } 
-</style>    
+        a.imageLink {
+            display: block;
+            background: url(/images/elog_edit_icon.svg) top no-repeat;
+            width: 18px;
+            height: 18px;
+            text-decoration: none;
+        }
+
+        a.imageLink:hover {
+            background-position: bottom;
+        }
+
+        a.imageLink span {
+            visibility: hidden;
+        }
+    </style>
 
 </head>
 
 <body>
 
-~[wc:admin_header_frame_css]<!-- breadcrumb start --><a href="/admin/home.html" target="_top">~[text:psx.html.admin_students.log.start_page]</a> &gt; <a href="home.html?selectstudent=nosearch" target="_top">~[text:psx.html.admin_students.log.student_selection]</a> &gt;~[text:psx.html.admin_students.log.log_entries1]<!-- breadcrumb end -->~[wc:admin_navigation_frame_css]
+    ~[wc:admin_header_frame_css]
+    <!-- breadcrumb start --><a href="/admin/home.html" target="_top">~[text:psx.html.admin_students.log.start_page]</a> &gt; <a href="home.html?selectstudent=nosearch" target="_top">~[text:psx.html.admin_students.log.student_selection]</a> &gt;~[text:psx.html.admin_students.log.log_entries1]
+    <!-- breadcrumb end -->~[wc:admin_navigation_frame_css] ~[wc:title_student_begin_css]~[text:psx.html.admin_students.log.log_entries2]~[wc:title_student_end_css]
 
-~[wc:title_student_begin_css]~[text:psx.html.admin_students.log.log_entries2]~[wc:title_student_end_css]
+    <!-- start of content and bounding box -->
+    <div class="box-round" ng-controller="eLogCtrl" ng-cloak>
 
-<!-- start of content and bounding box -->
-<div class="box-round"
-    ng-controller="eLogCtrl"
-    ng-cloak>
-
-    <table border="0" cellspacing="0" cellpadding="4">
-        <tr>
-            <td align="center">
-                <a href="disciplinealert.html?frn=~(studentfrn)">~[text:psx.html.admin_students.log.edit_discipline_alert]</a>
-            </td>
-        </tr>
-        <tr>
-            <td align="center">
-                <a href="customlogentry.html?frn=008-1&studentfrn=~(studentfrn)" id="btnNew" name="btnNew" class="button">~[text:psx.html.admin_students.log.new]</a>
-            </td>
-        </tr>
-    </table>
-
-<!-- CHANGE data-client-side-pagination TO false IF YOU WANT TO HIDE THE PAGINATION AND SHOW ALL RESULTS -->
-    <div id="eLogGrid" data-pss-grid-widget
-        data-data="eLogList"
-        data-filtered-data="eLogListFilt"
-        data-client-side-pagination="true">
-
-        <table class="grid">
-        <thead>
+        <table border="0" cellspacing="0" cellpadding="4">
             <tr>
-                <th style="text-align: center" data-exclude-from-filter="true">Edit</th>
-                <th data-pss-sort-fields="DATE|date" data-primary-sort="decending">Date</th>
-                <th data-pss-sort-fields="TIME">Time</th>
-                <th data-pss-sort-fields="AUTHOR">Author</th>
-                <th data-pss-sort-fields="LOGTYPE">Log Type</th>
-                <th data-pss-sort-fields="SUBTYPE">Subtype</th>
-                <th data-pss-sort-fields="SUBJECT">Title</th>
-                <th data-pss-sort-fields="LOGTEXT">Details</th>
+                <td align="center">
+                    <a href="disciplinealert.html?frn=~(studentfrn)">~[text:psx.html.admin_students.log.edit_discipline_alert]</a>
+                </td>
             </tr>
-        </thead>
+            <tr>
+                <td align="center">
+                    <a href="customlogentry.html?frn=008-1&studentfrn=~(studentfrn)" id="btnNew" name="btnNew" class="button">~[text:psx.html.admin_students.log.new]</a>
+                </td>
+            </tr>
+        </table>
 
-        <tbody>
-            <tr ng-repeat="item in eLogListFilt" >
-                <td align="center"><a class="imageLink" href="customlogentry.html?frn=008{{ item.LDCID }}&studentfrn=001{{ item.SDCID }}"></a></td>
-                <td align="left">{{ item.DATE|localizedDate }}</td>
-                <td align="left">{{ item.TIME }}</td>
-                <td align="left">{{ item.AUTHOR }}</td>
-                <td align="left">{{ item.LOGTYPE }}</td>
-                <td align="left">{{ item.SUBTYPE }}</td>
-                <td align="left">{{ item.SUBJECT }}</td>
-                <td align="left">{{ item.LOGTEXT }}</td>
-            </tr>
-        </tbody>
-    </table>
+        <!-- CHANGE data-client-side-pagination TO false IF YOU WANT TO HIDE THE PAGINATION AND SHOW ALL RESULTS -->
+        <div id="eLogGrid" data-pss-grid-widget data-data="eLogList" data-filtered-data="eLogListFilt" data-client-side-pagination="true">
+
+            <table class="grid">
+                <thead>
+                    <tr>
+                        <th style="text-align: center" data-exclude-from-filter="true">Edit</th>
+                        <th data-pss-sort-fields="DATE|date" data-primary-sort="decending">Date</th>
+                        <th data-pss-sort-fields="TIME">Time</th>
+                        <th data-pss-sort-fields="AUTHOR">Author</th>
+                        <th data-pss-sort-fields="LOGTYPE">Log Type</th>
+                        <th data-pss-sort-fields="SUBTYPE">Subtype</th>
+                        <th data-pss-sort-fields="SUBJECT">Title</th>
+                        <th data-pss-sort-fields="LOGTEXT">Details</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr ng-repeat="item in eLogListFilt">
+                        <td align="center">
+                            <a class="imageLink" href="customlogentry.html?frn=008{{ item.LDCID }}&studentfrn=001{{ item.SDCID }}"></a>
+                        </td>
+                        <td align="left">{{ item.DATE|localizedDate }}</td>
+                        <td align="left">{{ item.TIME }}</td>
+                        <td align="left">{{ item.AUTHOR }}</td>
+                        <td align="left">{{ item.LOGTYPE }}</td>
+                        <td align="left">{{ item.SUBTYPE }}</td>
+                        <td align="left">{{ item.SUBJECT }}</td>
+                        <td align="left">{{ item.LOGTEXT }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="font-size: 6pt;text-align: center">Icons made by <a href="http://www.flaticon.com/authors/simpleicon" title="SimpleIcon">SimpleIcon</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by
+            <a href="http://creativecommons.org/licenses/by/3.0/"
+                title="Creative Commons BY 3.0">CC BY 3.0</a>
+        </div>
+
+
     </div>
+    <!-- end of content of bounding box -->
 
-<div style="font-size: 6pt;text-align: center">Icons made by <a href="http://www.flaticon.com/authors/simpleicon" title="SimpleIcon">SimpleIcon</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a></div>
+    ~[wc:admin_footer_frame_css]
 
 
-</div> 
-<!-- end of content of bounding box -->
-
-~[wc:admin_footer_frame_css]
-
-   
-<script>
-        require(['angular', 'eLog/eLog'], function (angular) {
-           angular.bootstrap(document, ['eLogMod']);
+    <script>
+        require(['angular', 'eLog/eLog'], function(angular) {
+            angular.bootstrap(document, ['eLogMod']);
         });
-
-</script>
+    </script>
 
 </body>
-</html><!-- end right frame -->
 
-
+</html>
+<!-- end right frame -->
