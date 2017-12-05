@@ -25,7 +25,9 @@
     SELECT
     log.dcid AS log_dcid,
     students.dcid AS students_dcid,
-    log.entry_date,
+    extract(year from log.entry_date),
+    extract(month from log.entry_date),
+    extract(day from log.entry_date),
     log.entry_time,
     log.entry_author,
     log_type.name AS log_type,
@@ -53,8 +55,12 @@
   ] {
     "LDCID": ~(LDCID),
     "SDCID": ~(SDCID),
-    "DATE": "~(entry_date;d)",
-    "TIME": "~(entry_time;l;format=time)",
+    "DATE": {
+      "YEAR": "~(entry_date_year;json)",
+      "MONTH": "~(entry_date_month;json)",
+      "DAY": "~(entry_date_day;json)"
+    },
+    "TIME":"~(entry_time;l;format=time)",
     "AUTHOR": "~(entry_author;json)",
     "LOGTYPE": "~(NAME;json)",
     "SUBTYPE": "~(subtype;json)",

@@ -53,5 +53,16 @@
 ~[wc:admin_footer_frame_css]
 </form>
 
+	<script>
+		require.config({
+			paths: {
+				insertDateWidget: '/scripts/eLog/insertDateWidget'
+			}
+		});
+
+		require(['insertDateWidget'], function(insertDateWidget) {
+			insertDateWidget.default();
+		});
+	</script>
 </body>
 </html><!-- end right frame -->

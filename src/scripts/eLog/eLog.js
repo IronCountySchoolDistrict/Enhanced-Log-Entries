@@ -9,10 +9,10 @@ eLogApp.controller('eLogCtrl', function($rootScope, $scope, $compile, eLogGetSer
   $scope.eLogList = [];
 
   eLogGetService.geteLog('eLog-roles.json').then(function(retData) {
-    for (var i = 0; i < retData.length; i++) {
-      retData[i].DATE = i18nUtils.parseLocalizedDate(retData[i].DATE);
-    }
-    $scope.eLogList = retData;
+    $scope.eLogList = retData.map(item => {
+      item.DATE = new Date(item.DATE.YEAR, item.DATE.MONTH, item.DATE.DAY);
+      return item;
+    });
     closeLoading();
   });
 });
