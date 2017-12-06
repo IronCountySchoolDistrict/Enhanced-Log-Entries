@@ -10,7 +10,7 @@ eLogApp.controller('eLogCtrl', function($rootScope, $scope, $compile, eLogGetSer
 
   eLogGetService.geteLog('eLog-roles.json').then(function(retData) {
     $scope.eLogList = retData.map(item => {
-      item.DATE = new Date(item.DATE.YEAR, item.DATE.MONTH, item.DATE.DAY);
+      item.DATE = new Date(item.DATE.YEAR, item.DATE.MONTH - 1, item.DATE.DAY);
       return item;
     });
     closeLoading();
